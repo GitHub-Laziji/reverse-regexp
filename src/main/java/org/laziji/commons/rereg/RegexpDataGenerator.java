@@ -99,15 +99,23 @@ public class RegexpDataGenerator {
         if (snippet.isEmpty()) {
             return "";
         }
-        if (snippet.getLength() == 2
-                && regexpChs[snippet.getLeft()] == '\\'
-                && regexpChs[snippet.getLeft() + 1] == 'd') {
-            return random.nextInt(10) + "";
+        if (snippet.getLength() == 2 && regexpChs[snippet.getLeft()] == '\\') {
+            if (regexpChs[snippet.getLeft() + 1] == 'd') {
+                return randomRangeChar(new Range('0', '9'));
+            }
+            if (regexpChs[snippet.getLeft() + 1] == 'w') {
+                return randomRangeChar(new Range('a', 'z'), new Range('A', 'Z'), new Range('0', '9'), new Range('_'));
+            }
+            return regexpChs[snippet.getLeft() + 1] + "";
         }
         if (regexpChs[snippet.getLeft()] == '(') {
             return randomData(new Snippet(snippet.getLeft() + 1, snippet.getRight() - 1));
         }
         return StringUtils.charsToString(regexpChs, snippet.getLeft(), snippet.getRight());
+    }
+
+    private String randomRangeChar(Range... ranges) {
+        return ranges[random.nextInt(ranges.length)].random() + "";
     }
 
 
@@ -173,6 +181,40 @@ public class RegexpDataGenerator {
             }
         }
         return new Snippet(l, l + 1);
+    }
+
+    private static class Range {
+        private char start;
+        private char end;
+
+        private Range(char start) {
+            this.start = this.end = start;
+        }
+
+        private Range(char start, char end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        private char random() {
+            return (char) (new Random().nextInt(this.end + 1 - this.start) + this.start);
+        }
+
+        private char getStart() {
+            return start;
+        }
+
+        private void setStart(char start) {
+            this.start = start;
+        }
+
+        private char getEnd() {
+            return end;
+        }
+
+        private void setEnd(char end) {
+            this.end = end;
+        }
     }
 
     private static class Snippet {
