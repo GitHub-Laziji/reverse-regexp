@@ -41,6 +41,7 @@ public class RegexpDataGenerator {
         if (fullSnippets.size() == 0) {
             return "";
         }
+
         List<List<Snippet>> subSnippetsList = new ArrayList<>();
         subSnippetsList.add(new ArrayList<>());
         for (Snippet result : fullSnippets) {
@@ -52,22 +53,6 @@ public class RegexpDataGenerator {
         }
 
         List<Snippet> subSnippets = subSnippetsList.get(random.nextInt(subSnippetsList.size()));
-        if (subSnippets.size() == 0) {
-            return "";
-        }
-        if (subSnippets.size() == 1) {
-            Snippet result = subSnippets.get(0);
-            if (result.getLength() == 2
-                    && regexpChs[result.getLeft()] == '\\'
-                    && regexpChs[result.getLeft() + 1] == 'd') {
-                return random.nextInt(10) + "";
-            }
-            if (regexpChs[result.getLeft()] == '(') {
-                return randomData(new Snippet(result.getLeft() + 1, result.getRight() - 1));
-            }
-            return StringUtils.charsToString(regexpChs, subSnippets.get(0).getLeft(), subSnippets.get(subSnippets.size() - 1).getRight());
-        }
-
         StringBuilder value = new StringBuilder();
         for (int i = 0; i < subSnippets.size(); i++) {
             Snippet result = subSnippets.get(i);
@@ -104,10 +89,25 @@ public class RegexpDataGenerator {
             }
             int repeat = random.nextInt(maxRepeat - minRepeat + 1) + minRepeat;
             while (repeat-- > 0) {
-                value.append(randomData(result));
+                value.append(randomDataBySingleSnippet(result));
             }
         }
         return value.toString();
+    }
+
+    private String randomDataBySingleSnippet(Snippet snippet) throws RegexpIllegalException {
+        if (snippet.isEmpty()) {
+            return "";
+        }
+        if (snippet.getLength() == 2
+                && regexpChs[snippet.getLeft()] == '\\'
+                && regexpChs[snippet.getLeft() + 1] == 'd') {
+            return random.nextInt(10) + "";
+        }
+        if (regexpChs[snippet.getLeft()] == '(') {
+            return randomData(new Snippet(snippet.getLeft() + 1, snippet.getRight() - 1));
+        }
+        return StringUtils.charsToString(regexpChs, snippet.getLeft(), snippet.getRight());
     }
 
 
@@ -149,6 +149,7 @@ public class RegexpDataGenerator {
                         throw new RegexpIllegalException(this.regexp, i);
                     }
                     hasDelimiter = true;
+                    i++;
                     continue;
                 }
                 if (regexpChs[i] < '0' || regexpChs[i] > '9') {
