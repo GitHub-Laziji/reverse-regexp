@@ -113,53 +113,41 @@ public class RegexpDataGenerator {
             int i = snippet.getLeft() + 1;
             Character preChar = null;
             while (i < snippet.getRight() - 1) {
+                if (regexpChs[i] == '-') {
+                    throw new RegexpIllegalException(this.regexp, i);
+                }
                 if (regexpChs[i] == '\\') {
                     if (i + 1 >= snippet.getRight() - 1) {
                         throw new RegexpIllegalException(this.regexp, i);
                     }
                     if (regexpChs[i + 1] == 'd') {
                         ranges.add(new Range('0', '9'));
-                        i += 2;
-                        continue;
                     } else if (regexpChs[i + 1] == 'w') {
                         ranges.add(new Range('0', '9'));
                         ranges.add(new Range('A', 'Z'));
                         ranges.add(new Range('0', '9'));
                         ranges.add(new Range('_'));
-                        i += 2;
-                        continue;
                     } else {
                         if (preChar != null) {
                             ranges.add(new Range(preChar, regexpChs[i + 1]));
                             preChar = null;
-                            i += 2;
-                            continue;
-                        }
-                        if (i + 2 < snippet.getRight() - 1 && regexpChs[i + 2] == '-') {
+                        } else if (i + 2 < snippet.getRight() - 1 && regexpChs[i + 2] == '-') {
                             preChar = regexpChs[i + 1];
-                            i += 3;
-                            continue;
+                            i++;
+                        } else {
+                            ranges.add(new Range(regexpChs[i + 1]));
                         }
-                        ranges.add(new Range(regexpChs[i + 1]));
-                        i += 2;
-                        continue;
                     }
-                }
-                if (regexpChs[i] == '-') {
-                    throw new RegexpIllegalException(this.regexp, i);
-                }
-                if (preChar != null) {
+                    i++;
+                } else if (preChar != null) {
                     ranges.add(new Range(preChar, regexpChs[i]));
                     preChar = null;
-                    i++;
-                    continue;
-                }
-                if (i + 1 < snippet.getRight() - 1 && regexpChs[i + 1] == '-') {
+                } else if (i + 1 < snippet.getRight() - 1 && regexpChs[i + 1] == '-') {
                     preChar = regexpChs[i];
-                    i += 2;
-                    continue;
+                    i++;
+                } else {
+                    ranges.add(new Range(regexpChs[i]));
                 }
-                ranges.add(new Range(regexpChs[i]));
                 i++;
             }
             return randomRangeChar(ranges.toArray(new Range[0]));
