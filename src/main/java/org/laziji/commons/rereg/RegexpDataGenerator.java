@@ -12,8 +12,6 @@ public class RegexpDataGenerator {
 
     private static final int MAX_REPEAT = 9;
 
-    private Random random = new Random();
-
     private String regexp;
     private char[] regexpChs;
 
@@ -22,11 +20,11 @@ public class RegexpDataGenerator {
         this.regexpChs = regexp.toCharArray();
     }
 
-    public String randomData() throws RegexpIllegalException {
-        return randomData(new Snippet(0, regexpChs.length));
+    public String random() throws RegexpIllegalException {
+        return random(new Snippet(0, regexpChs.length));
     }
 
-    private String randomData(Snippet snippet) throws RegexpIllegalException {
+    private String random(Snippet snippet) throws RegexpIllegalException {
         int l = snippet.getLeft();
         int r = snippet.getRight();
         List<Snippet> fullSnippets = new ArrayList<>();
@@ -52,7 +50,7 @@ public class RegexpDataGenerator {
             subSnippetsList.get(subSnippetsList.size() - 1).add(result);
         }
 
-        List<Snippet> subSnippets = subSnippetsList.get(random.nextInt(subSnippetsList.size()));
+        List<Snippet> subSnippets = subSnippetsList.get(new Random().nextInt(subSnippetsList.size()));
         StringBuilder value = new StringBuilder();
         for (int i = 0; i < subSnippets.size(); i++) {
             Snippet result = subSnippets.get(i);
@@ -87,24 +85,24 @@ public class RegexpDataGenerator {
                     i++;
                 }
             }
-            int repeat = random.nextInt(maxRepeat - minRepeat + 1) + minRepeat;
+            int repeat = new Random().nextInt(maxRepeat - minRepeat + 1) + minRepeat;
             while (repeat-- > 0) {
-                value.append(randomDataBySingleSnippet(result));
+                value.append(randomBySingleSnippet(result));
             }
         }
         return value.toString();
     }
 
-    private String randomDataBySingleSnippet(Snippet snippet) throws RegexpIllegalException {
+    private String randomBySingleSnippet(Snippet snippet) throws RegexpIllegalException {
         if (snippet.isEmpty()) {
             return "";
         }
         if (snippet.getLength() == 2 && regexpChs[snippet.getLeft()] == '\\') {
             if (regexpChs[snippet.getLeft() + 1] == 'd') {
-                return randomRangeChar(new Range('0', '9'));
+                return randomByRangeList(new Range('0', '9'));
             }
             if (regexpChs[snippet.getLeft() + 1] == 'w') {
-                return randomRangeChar(new Range('a', 'z'), new Range('A', 'Z'), new Range('0', '9'), new Range('_'));
+                return randomByRangeList(new Range('a', 'z'), new Range('A', 'Z'), new Range('0', '9'), new Range('_'));
             }
             return regexpChs[snippet.getLeft() + 1] + "";
         }
@@ -150,16 +148,27 @@ public class RegexpDataGenerator {
                 }
                 i++;
             }
-            return randomRangeChar(ranges.toArray(new Range[0]));
+            return randomByRangeList(ranges.toArray(new Range[0]));
         }
         if (regexpChs[snippet.getLeft()] == '(') {
-            return randomData(new Snippet(snippet.getLeft() + 1, snippet.getRight() - 1));
+            return random(new Snippet(snippet.getLeft() + 1, snippet.getRight() - 1));
         }
         return StringUtils.charsToString(regexpChs, snippet.getLeft(), snippet.getRight());
     }
 
-    private String randomRangeChar(Range... ranges) {
-        return ranges[random.nextInt(ranges.length)].random() + "";
+    private String randomByRangeList(Range... ranges) {
+        int count = 0;
+        for (Range range : ranges) {
+            count += range.end + 1 - range.start;
+        }
+        int randomValue = new Random().nextInt(count);
+        for (Range range : ranges) {
+            if (randomValue < range.end + 1 - range.start) {
+                return (char) (range.start + randomValue) + "";
+            }
+            randomValue -= range.end + 1 - range.start;
+        }
+        return "";
     }
 
 
