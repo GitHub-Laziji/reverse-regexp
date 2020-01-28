@@ -1,7 +1,7 @@
 package org.laziji.commons.rereg.model;
 
 import org.laziji.commons.rereg.exception.RegexpIllegalException;
-import org.laziji.commons.rereg.exception.TypeNotMatchException;
+import org.laziji.commons.rereg.exception.UninitializedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,28 +17,50 @@ public abstract class BaseNode implements Node {
         this.expressionFragments = spliceExpression(expression);
     }
 
-    public BaseNode(List<String> expressionFragments) {
+    protected BaseNode(List<String> expressionFragments) {
         this.expressionFragments = expressionFragments;
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String fragment : expressionFragments) {
+            stringBuilder.append(fragment);
+        }
+        this.expression = stringBuilder.toString();
+    }
+
+    @Override
+    public String random() throws UninitializedException, RegexpIllegalException {
+        if (!isInitialized()) {
+            throw new UninitializedException();
+        }
+        return random(expression, expressionFragments);
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return initialized;
     }
 
     @Override
     public boolean test() {
-        return test(expressionFragments);
+        return test(expression, expressionFragments);
     }
 
     @Override
     public void init() throws RegexpIllegalException {
         if (!initialized) {
-            init(expressionFragments);
+            init(expression, expressionFragments);
             initialized = true;
         }
     }
 
-    protected void init(List<String> expressionFragments) throws RegexpIllegalException {
+    protected String random(String expression, List<String> expressionFragments) throws RegexpIllegalException, UninitializedException {
+        return null;
+    }
+
+    protected void init(String expression, List<String> expressionFragments) throws RegexpIllegalException {
 
     }
 
-    protected boolean test(List<String> expressionFragments) {
+    protected boolean test(String expression, List<String> expressionFragments) {
         return true;
     }
 

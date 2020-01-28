@@ -1,22 +1,26 @@
 package org.laziji.commons.rereg.model;
 
 import org.laziji.commons.rereg.exception.RegexpIllegalException;
-import org.laziji.commons.rereg.exception.TypeNotMatchException;
+import org.laziji.commons.rereg.exception.UninitializedException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OrdinaryNode extends BaseNode {
 
     private Node proxyNode;
 
-    public OrdinaryNode(String expression) throws RegexpIllegalException, TypeNotMatchException {
+    public OrdinaryNode(String expression) throws RegexpIllegalException {
         super(expression);
+        init();
     }
 
+    protected OrdinaryNode(List<String> expressionFragments) throws RegexpIllegalException {
+        super(expressionFragments);
+        init();
+    }
 
     @Override
-    public void init(List<String> expressionFragments) throws RegexpIllegalException {
+    public void init(String expression, List<String> expressionFragments) throws RegexpIllegalException {
         if (expressionFragments.size() == 0) {
             return;
         }
@@ -36,7 +40,7 @@ public class OrdinaryNode extends BaseNode {
     }
 
     @Override
-    public String random() {
+    protected String random(String expression, List<String> expressionFragments) throws UninitializedException, RegexpIllegalException {
         if (proxyNode == null) {
             return "";
         }
