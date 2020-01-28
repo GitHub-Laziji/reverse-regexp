@@ -2,12 +2,16 @@ package org.laziji.commons.rereg.model;
 
 import org.laziji.commons.rereg.exception.RegexpIllegalException;
 import org.laziji.commons.rereg.exception.UninitializedException;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class SingleNode extends BaseNode {
 
     private Node node;
+
+    private List<Interval> intervals;
 
     SingleNode(List<String> expressionFragments) throws RegexpIllegalException {
         super(expressionFragments);
@@ -29,6 +33,58 @@ public class SingleNode extends BaseNode {
             node = new OrdinaryNode(expression.substring(1, expression.length() - 1));
             return;
         }
+        intervals = new ArrayList<>();
+        if (expression.startsWith("[")) {
+            int i = 1;
+            Character preChar = null;
+            while (i < expression.length() - 1) {
+                if (expression.charAt(i) == '-') {
+                    throw new RegexpIllegalException(expression, i);
+                }
+                if (expression.charAt(i) == '\\') {
+                    if (i + 1 >= expression.length() - 1) {
+                        throw new RegexpIllegalException(expression, i);
+                    }
+                    if (expression.charAt(i + 1) == 'd') {
+                        intervals.add(new Interval('0', '9'));
+                    } else if (expression.charAt(i + 1) == 'w') {
+                        intervals.add(new Interval('0', '9'));
+                        intervals.add(new Interval('A', 'Z'));
+                        intervals.add(new Interval('0', '9'));
+                        intervals.add(new Interval('_'));
+                    } else {
+                        if (preChar != null) {
+                            intervals.add(new Interval(preChar, expression.charAt(i + 1)));
+                            preChar = null;
+                        } else if (i + 2 < expression.length() - 1 && expression.charAt(i + 2) == '-') {
+                            preChar = expression.charAt(i + 1);
+                            i++;
+                        } else {
+                            intervals.add(new Interval(expression.charAt(i + 1)));
+                        }
+                    }
+                    i++;
+                } else if (preChar != null) {
+                    intervals.add(new Interval(preChar, expression.charAt(i)));
+                    preChar = null;
+                } else if (i + 1 < expression.length() - 1 && expression.charAt(i + 1) == '-') {
+                    preChar = expression.charAt(i);
+                    i++;
+                } else {
+                    intervals.add(new Interval(expression.charAt(i)));
+                }
+                i++;
+            }
+        } else if ("\\d".equals(expression)) {
+            intervals.add(new Interval('0', '9'));
+        } else if ("\\w".equals(expression)) {
+            intervals.add(new Interval('a', 'z'));
+            intervals.add(new Interval('A', 'Z'));
+            intervals.add(new Interval('0', '9'));
+            intervals.add(new Interval('_'));
+        } else if (expression.startsWith("\\")) {
+            intervals.add(new Interval(expression.charAt(1)));
+        }
     }
 
     @Override
@@ -36,63 +92,38 @@ public class SingleNode extends BaseNode {
         if (node != null) {
             return node.random();
         }
-        if ("\\d".equals(expression)) {
-            return randomByRangeList(new Range('0', '9'));
-        }
-        if ("\\w".equals(expression)) {
-            return randomByRangeList(new Range('a', 'z'), new Range('A', 'Z'), new Range('0', '9'), new Range('_'));
-        }
-        if (expression.startsWith("\\")) {
-            return expression.substring(1);
+        if (intervals != null && intervals.size() > 0) {
+            Character value = randomCharFromInterval(intervals.toArray(new Interval[0]));
+            return value == null ? "" : value.toString();
         }
         return expression;
     }
 
-    private String randomByRangeList(Range... ranges) {
+    private Character randomCharFromInterval(Interval... intervals) {
         int count = 0;
-        for (Range range : ranges) {
-            count += range.end + 1 - range.start;
+        for (Interval interval : intervals) {
+            count += interval.end + 1 - interval.start;
         }
         int randomValue = new Random().nextInt(count);
-        for (Range range : ranges) {
-            if (randomValue < range.end + 1 - range.start) {
-                return (char) (range.start + randomValue) + "";
+        for (Interval interval : intervals) {
+            if (randomValue < interval.end + 1 - interval.start) {
+                return (char) (interval.start + randomValue);
             }
-            randomValue -= range.end + 1 - range.start;
+            randomValue -= interval.end + 1 - interval.start;
         }
-        return "";
+        return null;
     }
 
-    private static class Range {
+    private static class Interval {
         private char start;
         private char end;
 
-        private Range(char start) {
+        private Interval(char start) {
             this.start = this.end = start;
         }
 
-        private Range(char start, char end) {
+        private Interval(char start, char end) {
             this.start = start;
-            this.end = end;
-        }
-
-        private char random() {
-            return (char) (new Random().nextInt(this.end + 1 - this.start) + this.start);
-        }
-
-        private char getStart() {
-            return start;
-        }
-
-        private void setStart(char start) {
-            this.start = start;
-        }
-
-        private char getEnd() {
-            return end;
-        }
-
-        private void setEnd(char end) {
             this.end = end;
         }
     }
