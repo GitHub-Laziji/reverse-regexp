@@ -12,12 +12,12 @@ public class LinkNode extends BaseNode {
 
     private List<Node> children;
 
-    public LinkNode(String expression) throws RegexpIllegalException {
-        super(expression);
+    LinkNode(List<String> expressionFragments) throws RegexpIllegalException {
+        super(expressionFragments);
     }
 
-    public LinkNode(List<String> expressionFragments) {
-        super(expressionFragments);
+    LinkNode(List<String> expressionFragments, boolean initialize) throws RegexpIllegalException {
+        super(expressionFragments, initialize);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class LinkNode extends BaseNode {
         for (int i = 0; i < expressionFragments.size(); i++) {
             Node node;
             if (i + 1 < expressionFragments.size()) {
-                node = new RepeatNode(Arrays.asList(expressionFragments.get(i), expressionFragments.get(i + 1)));
+                node = new RepeatNode(Arrays.asList(expressionFragments.get(i), expressionFragments.get(i + 1)), false);
                 if (node.test()) {
                     node.init();
                     children.add(node);
@@ -45,7 +45,6 @@ public class LinkNode extends BaseNode {
                 }
             }
             node = new SingleNode(Collections.singletonList(expressionFragments.get(i)));
-            node.init();
             children.add(node);
         }
     }

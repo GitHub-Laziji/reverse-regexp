@@ -11,12 +11,12 @@ public class OptionalNode extends BaseNode {
 
     private List<Node> children;
 
-    public OptionalNode(String expression) throws RegexpIllegalException {
-        super(expression);
+    OptionalNode(List<String> expressionFragments) throws RegexpIllegalException {
+        super(expressionFragments);
     }
 
-    protected OptionalNode(List<String> expressionFragments) {
-        super(expressionFragments);
+    OptionalNode(List<String> expressionFragments, boolean initialize) throws RegexpIllegalException {
+        super(expressionFragments, initialize);
     }
 
     @Override

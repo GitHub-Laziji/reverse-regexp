@@ -11,12 +11,10 @@ public class OrdinaryNode extends BaseNode {
 
     public OrdinaryNode(String expression) throws RegexpIllegalException {
         super(expression);
-        init();
     }
 
-    protected OrdinaryNode(List<String> expressionFragments) throws RegexpIllegalException {
+    OrdinaryNode(List<String> expressionFragments) throws RegexpIllegalException {
         super(expressionFragments);
-        init();
     }
 
     @Override
@@ -25,10 +23,10 @@ public class OrdinaryNode extends BaseNode {
             return;
         }
         Node[] nodes = new Node[]{
-                new OptionalNode(expressionFragments),
-                new SingleNode(expressionFragments),
-                new RepeatNode(expressionFragments),
-                new LinkNode(expressionFragments)
+                new OptionalNode(expressionFragments, false),
+                new SingleNode(expressionFragments, false),
+                new RepeatNode(expressionFragments, false),
+                new LinkNode(expressionFragments, false)
         };
         for (Node node : nodes) {
             if (node.test()) {

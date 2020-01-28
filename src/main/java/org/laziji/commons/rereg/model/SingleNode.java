@@ -1,11 +1,7 @@
 package org.laziji.commons.rereg.model;
 
-import org.laziji.commons.rereg.RegexpDataGenerator;
 import org.laziji.commons.rereg.exception.RegexpIllegalException;
-import org.laziji.commons.rereg.exception.TypeNotMatchException;
 import org.laziji.commons.rereg.exception.UninitializedException;
-import org.laziji.commons.rereg.model.BaseNode;
-
 import java.util.List;
 import java.util.Random;
 
@@ -13,13 +9,14 @@ public class SingleNode extends BaseNode {
 
     private Node node;
 
-    public SingleNode(String expression) throws RegexpIllegalException {
-        super(expression);
-    }
-
-    public SingleNode(List<String> expressionFragments) {
+    SingleNode(List<String> expressionFragments) throws RegexpIllegalException {
         super(expressionFragments);
     }
+
+    SingleNode(List<String> expressionFragments, boolean initialize) throws RegexpIllegalException {
+        super(expressionFragments, initialize);
+    }
+
 
     @Override
     protected boolean test(String expression, List<String> expressionFragments) {
@@ -30,6 +27,7 @@ public class SingleNode extends BaseNode {
     protected void init(String expression, List<String> expressionFragments) throws RegexpIllegalException {
         if (expression.startsWith("(")) {
             node = new OrdinaryNode(expression.substring(1, expression.length() - 1));
+            return;
         }
     }
 
@@ -37,9 +35,6 @@ public class SingleNode extends BaseNode {
     protected String random(String expression, List<String> expressionFragments) throws RegexpIllegalException, UninitializedException {
         if (node != null) {
             return node.random();
-        }
-        if (expression == null || expression.isEmpty()) {
-            return "";
         }
         if ("\\d".equals(expression)) {
             return randomByRangeList(new Range('0', '9'));

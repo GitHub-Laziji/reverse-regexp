@@ -12,18 +12,32 @@ public abstract class BaseNode implements Node {
     private List<String> expressionFragments;
     private boolean initialized;
 
-    public BaseNode(String expression) throws RegexpIllegalException {
-        this.expression = expression;
-        this.expressionFragments = spliceExpression(expression);
+    BaseNode(String expression) throws RegexpIllegalException {
+        this(expression, true);
     }
 
-    protected BaseNode(List<String> expressionFragments) {
+    BaseNode(String expression, boolean initialize) throws RegexpIllegalException {
+        this.expression = expression;
+        this.expressionFragments = spliceExpression(expression);
+        if (initialize) {
+            init();
+        }
+    }
+
+    BaseNode(List<String> expressionFragments) throws RegexpIllegalException {
+        this(expressionFragments, true);
+    }
+
+    BaseNode(List<String> expressionFragments, boolean initialize) throws RegexpIllegalException {
         this.expressionFragments = expressionFragments;
         StringBuilder stringBuilder = new StringBuilder();
         for (String fragment : expressionFragments) {
             stringBuilder.append(fragment);
         }
         this.expression = stringBuilder.toString();
+        if (initialize) {
+            init();
+        }
     }
 
     @Override

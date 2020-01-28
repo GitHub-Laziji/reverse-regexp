@@ -3,6 +3,8 @@ package org.laziji.commons.rereg.model;
 import org.laziji.commons.rereg.exception.RegexpIllegalException;
 import org.laziji.commons.rereg.exception.UninitializedException;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -14,12 +16,12 @@ public class RepeatNode extends BaseNode {
     private int minRepeat = 1;
     private int maxRepeat = 1;
 
-    public RepeatNode(String expression) throws RegexpIllegalException {
-        super(expression);
+    RepeatNode(List<String> expressionFragments) throws RegexpIllegalException {
+        super(expressionFragments);
     }
 
-    public RepeatNode(List<String> expressionFragments) {
-        super(expressionFragments);
+    RepeatNode(List<String> expressionFragments, boolean initialize) throws RegexpIllegalException {
+        super(expressionFragments, initialize);
     }
 
     @Override
@@ -34,8 +36,7 @@ public class RepeatNode extends BaseNode {
 
     @Override
     protected void init(String expression, List<String> expressionFragments) throws RegexpIllegalException {
-        node = new SingleNode(expressionFragments.get(0));
-        node.init();
+        node = new SingleNode(Collections.singletonList(expressionFragments.get(0)));
         String token = expressionFragments.get(1);
         if ("+".equals(token)) {
             maxRepeat = MAX_REPEAT;
