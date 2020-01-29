@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class RepeatNode extends BaseNode {
 
-    private static final int MAX_REPEAT = 9;
+    private static final int MAX_REPEAT = 16;
 
     private Node node;
     private int minRepeat = 1;
