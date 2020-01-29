@@ -1,6 +1,7 @@
 package org.laziji.commons.rereg.model;
 
 import org.laziji.commons.rereg.exception.RegexpIllegalException;
+import org.laziji.commons.rereg.exception.TypeNotMatchException;
 import org.laziji.commons.rereg.exception.UninitializedException;
 
 import java.util.ArrayList;
@@ -11,11 +12,12 @@ public class OptionalNode extends BaseNode {
 
     private List<Node> children;
 
-    OptionalNode(List<String> expressionFragments) throws RegexpIllegalException {
+    OptionalNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments);
     }
 
-    OptionalNode(List<String> expressionFragments, boolean initialize) throws RegexpIllegalException {
+    OptionalNode(List<String> expressionFragments, boolean initialize)
+            throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments, initialize);
     }
 
@@ -30,7 +32,8 @@ public class OptionalNode extends BaseNode {
     }
 
     @Override
-    protected void init(String expression, List<String> expressionFragments) throws RegexpIllegalException {
+    protected void init(String expression, List<String> expressionFragments)
+            throws RegexpIllegalException, TypeNotMatchException {
         children = new ArrayList<>();
         List<String> subFragments = new ArrayList<>();
         for (String fragment : expressionFragments) {
@@ -45,7 +48,8 @@ public class OptionalNode extends BaseNode {
     }
 
     @Override
-    protected String random(String expression, List<String> expressionFragments) throws UninitializedException, RegexpIllegalException {
+    protected String random(String expression, List<String> expressionFragments)
+            throws UninitializedException, RegexpIllegalException {
         return children.get(new Random().nextInt(children.size())).random();
     }
 }

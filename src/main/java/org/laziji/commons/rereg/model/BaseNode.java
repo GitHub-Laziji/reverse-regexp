@@ -1,6 +1,7 @@
 package org.laziji.commons.rereg.model;
 
 import org.laziji.commons.rereg.exception.RegexpIllegalException;
+import org.laziji.commons.rereg.exception.TypeNotMatchException;
 import org.laziji.commons.rereg.exception.UninitializedException;
 
 import java.util.ArrayList;
@@ -12,11 +13,11 @@ public abstract class BaseNode implements Node {
     private List<String> expressionFragments;
     private boolean initialized;
 
-    BaseNode(String expression) throws RegexpIllegalException {
+    BaseNode(String expression) throws RegexpIllegalException, TypeNotMatchException {
         this(expression, true);
     }
 
-    BaseNode(String expression, boolean initialize) throws RegexpIllegalException {
+    BaseNode(String expression, boolean initialize) throws RegexpIllegalException, TypeNotMatchException {
         this.expression = expression;
         this.expressionFragments = spliceExpression(expression);
         if (initialize) {
@@ -24,11 +25,12 @@ public abstract class BaseNode implements Node {
         }
     }
 
-    BaseNode(List<String> expressionFragments) throws RegexpIllegalException {
+    BaseNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
         this(expressionFragments, true);
     }
 
-    BaseNode(List<String> expressionFragments, boolean initialize) throws RegexpIllegalException {
+    BaseNode(List<String> expressionFragments, boolean initialize)
+            throws RegexpIllegalException, TypeNotMatchException {
         this.expressionFragments = expressionFragments;
         StringBuilder stringBuilder = new StringBuilder();
         for (String fragment : expressionFragments) {
@@ -59,18 +61,23 @@ public abstract class BaseNode implements Node {
     }
 
     @Override
-    public void init() throws RegexpIllegalException {
+    public void init() throws RegexpIllegalException, TypeNotMatchException {
         if (!initialized) {
+            if (!test()) {
+                throw new TypeNotMatchException();
+            }
             init(expression, expressionFragments);
             initialized = true;
         }
     }
 
-    protected String random(String expression, List<String> expressionFragments) throws RegexpIllegalException, UninitializedException {
+    protected String random(String expression, List<String> expressionFragments)
+            throws RegexpIllegalException, UninitializedException {
         return null;
     }
 
-    protected void init(String expression, List<String> expressionFragments) throws RegexpIllegalException {
+    protected void init(String expression, List<String> expressionFragments)
+            throws RegexpIllegalException, TypeNotMatchException {
 
     }
 

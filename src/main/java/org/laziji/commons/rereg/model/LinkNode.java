@@ -1,6 +1,7 @@
 package org.laziji.commons.rereg.model;
 
 import org.laziji.commons.rereg.exception.RegexpIllegalException;
+import org.laziji.commons.rereg.exception.TypeNotMatchException;
 import org.laziji.commons.rereg.exception.UninitializedException;
 
 import java.util.ArrayList;
@@ -12,11 +13,12 @@ public class LinkNode extends BaseNode {
 
     private List<Node> children;
 
-    LinkNode(List<String> expressionFragments) throws RegexpIllegalException {
+    LinkNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments);
     }
 
-    LinkNode(List<String> expressionFragments, boolean initialize) throws RegexpIllegalException {
+    LinkNode(List<String> expressionFragments, boolean initialize)
+            throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments, initialize);
     }
 
@@ -31,12 +33,15 @@ public class LinkNode extends BaseNode {
     }
 
     @Override
-    protected void init(String expression, List<String> expressionFragments) throws RegexpIllegalException {
+    protected void init(String expression, List<String> expressionFragments)
+            throws RegexpIllegalException, TypeNotMatchException {
         children = new ArrayList<>();
         for (int i = 0; i < expressionFragments.size(); i++) {
             Node node;
             if (i + 1 < expressionFragments.size()) {
-                node = new RepeatNode(Arrays.asList(expressionFragments.get(i), expressionFragments.get(i + 1)), false);
+                node = new RepeatNode(
+                        Arrays.asList(expressionFragments.get(i), expressionFragments.get(i + 1)),
+                        false);
                 if (node.test()) {
                     node.init();
                     children.add(node);
@@ -50,7 +55,8 @@ public class LinkNode extends BaseNode {
     }
 
     @Override
-    protected String random(String expression, List<String> expressionFragments) throws RegexpIllegalException, UninitializedException {
+    protected String random(String expression, List<String> expressionFragments)
+            throws RegexpIllegalException, UninitializedException {
         StringBuilder value = new StringBuilder();
         for (Node node : children) {
             value.append(node.random());

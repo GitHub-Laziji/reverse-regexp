@@ -1,6 +1,7 @@
 package org.laziji.commons.rereg.model;
 
 import org.laziji.commons.rereg.exception.RegexpIllegalException;
+import org.laziji.commons.rereg.exception.TypeNotMatchException;
 import org.laziji.commons.rereg.exception.UninitializedException;
 
 import java.util.Collections;
@@ -15,11 +16,12 @@ public class RepeatNode extends BaseNode {
     private int minRepeat = 1;
     private int maxRepeat = 1;
 
-    RepeatNode(List<String> expressionFragments) throws RegexpIllegalException {
+    RepeatNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments);
     }
 
-    RepeatNode(List<String> expressionFragments, boolean initialize) throws RegexpIllegalException {
+    RepeatNode(List<String> expressionFragments, boolean initialize)
+            throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments, initialize);
     }
 
@@ -34,7 +36,8 @@ public class RepeatNode extends BaseNode {
     }
 
     @Override
-    protected void init(String expression, List<String> expressionFragments) throws RegexpIllegalException {
+    protected void init(String expression, List<String> expressionFragments)
+            throws RegexpIllegalException, TypeNotMatchException {
         node = new SingleNode(Collections.singletonList(expressionFragments.get(0)));
         String token = expressionFragments.get(1);
         if ("+".equals(token)) {
@@ -54,7 +57,8 @@ public class RepeatNode extends BaseNode {
     }
 
     @Override
-    protected String random(String expression, List<String> expressionFragments) throws RegexpIllegalException, UninitializedException {
+    protected String random(String expression, List<String> expressionFragments)
+            throws RegexpIllegalException, UninitializedException {
         int repeat = new Random().nextInt(maxRepeat - minRepeat + 1) + minRepeat;
         StringBuilder value = new StringBuilder();
         while (repeat-- > 0) {

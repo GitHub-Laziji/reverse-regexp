@@ -1,6 +1,7 @@
 package org.laziji.commons.rereg.model;
 
 import org.laziji.commons.rereg.exception.RegexpIllegalException;
+import org.laziji.commons.rereg.exception.TypeNotMatchException;
 import org.laziji.commons.rereg.exception.UninitializedException;
 
 public interface Node {
@@ -11,7 +12,7 @@ public interface Node {
 
     boolean test();
 
-    void init() throws RegexpIllegalException;
+    void init() throws RegexpIllegalException, TypeNotMatchException;
 
     boolean isInitialized();
 }
