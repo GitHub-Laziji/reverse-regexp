@@ -4,7 +4,7 @@
 
 ## 安装
 ```
-git clone git@github.com:GitHub-Laziji/reverse-regexp.git
+git clone https://github.com/GitHub-Laziji/reverse-regexp
 cd reverse-regexp
 mvn install
 ```
