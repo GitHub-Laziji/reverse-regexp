@@ -48,10 +48,10 @@ public class RepeatNode extends BaseNode {
             minRepeat = 0;
             maxRepeat = MAX_REPEAT;
         } else if (token.startsWith("{")) {
-            String[] numbers = token.substring(1, token.length() - 1).split(",");
+            String[] numbers = token.substring(1, token.length() - 1).split(",", 2);
             minRepeat = maxRepeat = Integer.parseInt(numbers[0]);
             if (numbers.length > 1) {
-                maxRepeat = Integer.parseInt(numbers[1]);
+                maxRepeat = numbers[1].isEmpty() ? Math.max(MAX_REPEAT, minRepeat) : Integer.parseInt(numbers[1]);
             }
         }
     }

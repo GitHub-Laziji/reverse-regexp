@@ -134,9 +134,6 @@ public abstract class BaseNode implements Node {
             boolean hasDelimiter = false;
             while (i < r) {
                 if (expression.charAt(i) == '}') {
-                    if (i - l + 1 < 3 || expression.charAt(i - 1) == ',') {
-                        throw new RegexpIllegalException(expression, i - 1);
-                    }
                     return expression.substring(l, i + 1);
                 }
                 if (expression.charAt(i) == ',') {

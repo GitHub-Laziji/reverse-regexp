@@ -36,7 +36,6 @@ public class SingleNode extends BaseNode {
             node = new OrdinaryNode(expression.substring(1, expression.length() - 1));
             return;
         }
-        intervals = new ArrayList<>();
         if (expression.startsWith("[")) {
             int i = 1;
             Character preChar = null;
@@ -44,49 +43,55 @@ public class SingleNode extends BaseNode {
                 if (expression.charAt(i) == '-') {
                     throw new RegexpIllegalException(expression, i);
                 }
-                if (expression.charAt(i) == '\\') {
+                if (expression.charAt(i) == '.') {
+                    addIntervals(
+                            (char) 0, (char) ('\n' - 1),
+                            (char) ('\n' + 1), (char) ('\r' - 1),
+                            (char) ('\r' + 1), (char) 255);
+                } else if (expression.charAt(i) == '\\') {
                     if (i + 1 >= expression.length() - 1) {
                         throw new RegexpIllegalException(expression, i);
                     }
                     if (expression.charAt(i + 1) == 'd') {
-                        intervals.add(new Interval('0', '9'));
+                        addIntervals('0', '9');
                     } else if (expression.charAt(i + 1) == 'w') {
-                        intervals.add(new Interval('0', '9'));
-                        intervals.add(new Interval('A', 'Z'));
-                        intervals.add(new Interval('0', '9'));
-                        intervals.add(new Interval('_'));
+                        addIntervals('0', '9', 'A', 'Z', 'a', 'z', '_', null);
                     } else {
                         if (preChar != null) {
-                            intervals.add(new Interval(preChar, expression.charAt(i + 1)));
+                            addIntervals(preChar, expression.charAt(i + 1));
                             preChar = null;
                         } else if (i + 2 < expression.length() - 1 && expression.charAt(i + 2) == '-') {
                             preChar = expression.charAt(i + 1);
                             i++;
                         } else {
-                            intervals.add(new Interval(expression.charAt(i + 1)));
+                            addIntervals(expression.charAt(i + 1), null);
                         }
                     }
                     i++;
                 } else if (preChar != null) {
-                    intervals.add(new Interval(preChar, expression.charAt(i)));
+                    addIntervals(preChar, expression.charAt(i));
                     preChar = null;
                 } else if (i + 1 < expression.length() - 1 && expression.charAt(i + 1) == '-') {
                     preChar = expression.charAt(i);
                     i++;
                 } else {
-                    intervals.add(new Interval(expression.charAt(i)));
+                    addIntervals(expression.charAt(i), null);
                 }
                 i++;
             }
+        } else if (".".equals(expression)) {
+            addIntervals(
+                    (char) 0, (char) ('\n' - 1),
+                    (char) ('\n' + 1), (char) ('\r' - 1),
+                    (char) ('\r' + 1), (char) 255);
+        } else if ("\\s".equals(expression)) {
+            addIntervals(' ', null, '\t', null);
         } else if ("\\d".equals(expression)) {
-            intervals.add(new Interval('0', '9'));
+            addIntervals('0', '9');
         } else if ("\\w".equals(expression)) {
-            intervals.add(new Interval('a', 'z'));
-            intervals.add(new Interval('A', 'Z'));
-            intervals.add(new Interval('0', '9'));
-            intervals.add(new Interval('_'));
+            addIntervals('0', '9', 'A', 'Z', 'a', 'z', '_', null);
         } else if (expression.startsWith("\\")) {
-            intervals.add(new Interval(expression.charAt(1)));
+            addIntervals(expression.charAt(1), null);
         }
     }
 
@@ -118,13 +123,23 @@ public class SingleNode extends BaseNode {
         return null;
     }
 
+    private void addIntervals(Character... chars) {
+        if (intervals == null) {
+            intervals = new ArrayList<>();
+        }
+        for (int i = 0; i + 1 < chars.length; i += 2) {
+            Character start = chars[i];
+            Character end = chars[i + 1] == null ? start : chars[i + 1];
+            if (start == null || end < start) {
+                continue;
+            }
+            intervals.add(new Interval(start, end));
+        }
+    }
+
     private static class Interval {
         private char start;
         private char end;
-
-        private Interval(char start) {
-            this.start = this.end = start;
-        }
 
         private Interval(char start, char end) {
             this.start = start;
