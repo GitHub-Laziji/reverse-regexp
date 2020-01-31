@@ -44,41 +44,76 @@ public class MainTest {
 
     @Test
     public void test() throws RegexpIllegalException, UninitializedException, TypeNotMatchException {
-        //"1(3|5|7|8)\\d{9}"
-        //"\\w{6,12}@[a-z0-9]{3,4}\\.(com|cn)"
-        Node node1 = new OrdinaryNode("\\w{6,12}@[a-z0-9]{3,4}\\.(com|cn)");
-        for (int i = 0; i < 10; i++) {
-            System.out.println(node1.random());
-        }
-
-        Node node2 = new OrdinaryNode("1(3|5|7|8)\\d{9}");
-        for (int i = 0; i < 10; i++) {
-            System.out.println(node2.random());
-        }
+        
+        random("\\w{6,12}@[a-z0-9]{3}\\.(com|cn)", "邮箱");
+        random("1(3|5|7|8)\\d{9}", "手机号");
+        random("-?[1-9]\\d*\\.\\d+", "浮点数");
+        random("https?://[\\w-]+(\\.[\\w-]+){1,2}(/[\\w-]{3,6}){0,2}(\\?[\\w_]{4,6}=[\\w_]{4,6}(&[\\w_]{4,6}=[\\w_]{4,6}){0,2})?", "网址");
     }
+    
+    private void random(String expression, String title)
+            throws RegexpIllegalException, TypeNotMatchException, UninitializedException {
+        
+        System.out.println(title + " " + expression);
+        Node node = new OrdinaryNode(expression);
+        Pattern pattern = Pattern.compile(node.getExpression());
+        for (int i = 0; i < 10; i++) {
+            String data = node.random();
+            System.out.println("[" + pattern.matcher(data).matches() + "] " + data);
+        }
+        System.out.println();
+    }
+
 }
 ```
 
 输出
 ```
-e8q9RcpqA@v86.cn
-4j9JY3eAwcK@taed.cn
-DxMk9WAC@nezq.cn
-a_DkgsX53@65oi.cn
-9FdnaW@xwc0.cn
-i7OC4jKkd@qg5.cn
-04w3Ey3XDk@01h0.com
-cxm1hm0eypdr@nrk.com
-S6gLYGH@4ku6.com
-uIEVMkv@wow7.com
-15888816167
-13570739660
-18777512187
-17696928416
-18070326829
-15867303803
-17520644809
-15822003765
-15656061323
-18611800570
+邮箱 \w{6,12}@[a-z0-9]{3}\.(com|cn)
+[true] 19cZ8eISNA@9je.com
+[true] xpv3wJ@i3h.cn
+[true] 6qDUfY@1g9.com
+[true] iVnZSMA373@6zd.cn
+[true] I5wiX97@ffe.cn
+[true] mwqA5sXQ@g8j.cn
+[true] HUXiCem1Y0w@j98.cn
+[true] 1jOQWsELF@u1o.cn
+[true] _Q4QTvxPeMFh@bds.com
+[true] 3xFH33Aa@6lh.cn
+
+手机号 1(3|5|7|8)\d{9}
+[true] 18263364656
+[true] 17539493178
+[true] 17452542895
+[true] 15190699623
+[true] 13441385631
+[true] 15450856416
+[true] 18651247283
+[true] 13835809899
+[true] 18595798569
+[true] 17115703866
+
+浮点数 -?[1-9]\d*\.\d+
+[true] 8148340336.1501586550282701
+[true] -3339660539.406
+[true] -51.6120243661611419
+[true] -731621835440468.9708278
+[true] -27438753435.9137579
+[true] 393811376.777268751417
+[true] 3286498432415.3962664603
+[true] -5299652275.9
+[true] 216.93676279820770
+[true] 34.36843273
+
+网址 https?://[\w-]+(\.[\w-]+){1,2}(/[\w-]{3,6}){0,2}(\?[\w_]{4,6}=[\w_]{4,6}(&[\w_]{4,6}=[\w_]{4,6}){0,2})?
+[true] https://a_fl.thx/4_4
+[true] http://v3YTuJ0Gu-5z8.JGhpdLe/V2j/ndL-UO
+[true] https://FuMG-gafEc.R2FRRtLyX/ahg
+[true] https://5phYVK9.wh7vl9z3AAZVg.z-yQSiMTdQw8S9-/WKCd
+[true] https://T9dntbI.4Su8vxYhCr6?T85gV=R6TYtm&1c97x=nCTyA5
+[true] http://qHyDgqBtYwq6Stg8.I6gb-M_ripkiEafK?ZLxy=Itny&RmsTX=X7KEuW&bwuk2=frcjO6
+[true] http://UJ.Yb3foKTJKy-uqKUl.ZXrrFUk9K/Dcymu?W2tasq=oqzS&hYGWD=MF6l&FMHOi=F6ct8T
+[true] https://BY_iS.tnlclAvxMkuO.T90G5XETj/cQncGI
+[true] http://hG.li8Nzv.uaGokB/CTnrqp
+[true] https://huZmN.v-LtoY/Dyl/peq?NUmt=__QDXG&8GBY=wZ8M&AkKZl4=8NZfEt
 ```

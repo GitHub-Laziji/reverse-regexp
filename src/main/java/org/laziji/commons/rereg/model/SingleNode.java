@@ -40,15 +40,7 @@ public class SingleNode extends BaseNode {
             int i = 1;
             Character preChar = null;
             while (i < expression.length() - 1) {
-                if (expression.charAt(i) == '-') {
-                    throw new RegexpIllegalException(expression, i);
-                }
-                if (expression.charAt(i) == '.') {
-                    addIntervals(
-                            (char) 0, (char) ('\n' - 1),
-                            (char) ('\n' + 1), (char) ('\r' - 1),
-                            (char) ('\r' + 1), (char) 255);
-                } else if (expression.charAt(i) == '\\') {
+                if (expression.charAt(i) == '\\') {
                     if (i + 1 >= expression.length() - 1) {
                         throw new RegexpIllegalException(expression, i);
                     }
@@ -56,11 +48,13 @@ public class SingleNode extends BaseNode {
                         addIntervals('0', '9');
                     } else if (expression.charAt(i + 1) == 'w') {
                         addIntervals('0', '9', 'A', 'Z', 'a', 'z', '_', null);
+                    } else if (expression.charAt(i + 1) == 's') {
+                        addIntervals(' ', null, '\t', null);
                     } else {
                         if (preChar != null) {
                             addIntervals(preChar, expression.charAt(i + 1));
                             preChar = null;
-                        } else if (i + 2 < expression.length() - 1 && expression.charAt(i + 2) == '-') {
+                        } else if (i + 2 < expression.length() && expression.charAt(i + 2) == '-') {
                             preChar = expression.charAt(i + 1);
                             i++;
                         } else {
@@ -71,13 +65,16 @@ public class SingleNode extends BaseNode {
                 } else if (preChar != null) {
                     addIntervals(preChar, expression.charAt(i));
                     preChar = null;
-                } else if (i + 1 < expression.length() - 1 && expression.charAt(i + 1) == '-') {
+                } else if (i + 1 < expression.length() && expression.charAt(i + 1) == '-') {
                     preChar = expression.charAt(i);
                     i++;
                 } else {
                     addIntervals(expression.charAt(i), null);
                 }
                 i++;
+            }
+            if (preChar != null) {
+                addIntervals(preChar, null, '-', null);
             }
         } else if (".".equals(expression)) {
             addIntervals(
