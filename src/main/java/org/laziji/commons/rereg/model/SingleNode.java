@@ -44,6 +44,10 @@ public class SingleNode extends BaseNode {
                     if (i + 1 >= expression.length() - 1) {
                         throw new RegexpIllegalException(expression, i);
                     }
+                    if (preChar != null && "dws".contains(expression.charAt(i + 1) + "")) {
+                        addIntervals(preChar, null, '-', null);
+                        preChar = null;
+                    }
                     if (expression.charAt(i + 1) == 'd') {
                         addIntervals('0', '9');
                     } else if (expression.charAt(i + 1) == 'w') {
@@ -120,15 +124,20 @@ public class SingleNode extends BaseNode {
         return null;
     }
 
-    private void addIntervals(Character... chars) {
+    private void addIntervals(Character... chars) throws RegexpIllegalException {
         if (intervals == null) {
             intervals = new ArrayList<>();
         }
         for (int i = 0; i + 1 < chars.length; i += 2) {
             Character start = chars[i];
             Character end = chars[i + 1] == null ? start : chars[i + 1];
-            if (start == null || end < start) {
-                continue;
+            if (start == null) {
+                throw new RegexpIllegalException("Invalid regular expression: "
+                        + getExpression() + " : Character class is null");
+            }
+            if (end < start) {
+                throw new RegexpIllegalException("Invalid regular expression: "
+                        + getExpression() + " : Range out of order in character class");
             }
             intervals.add(new Interval(start, end));
         }
