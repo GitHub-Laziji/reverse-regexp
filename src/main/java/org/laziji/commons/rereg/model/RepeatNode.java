@@ -52,6 +52,10 @@ public class RepeatNode extends BaseNode {
             minRepeat = maxRepeat = Integer.parseInt(numbers[0]);
             if (numbers.length > 1) {
                 maxRepeat = numbers[1].isEmpty() ? Math.max(MAX_REPEAT, minRepeat) : Integer.parseInt(numbers[1]);
+                if (maxRepeat < minRepeat) {
+                    throw new RegexpIllegalException("Invalid regular expression: "
+                            + getExpression() + " : Numbers out of order in {} quantifier");
+                }
             }
         }
     }
