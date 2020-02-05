@@ -7,14 +7,12 @@
 ## 安装
 ```xml
 <project>
-
     <repositories>
         <repository>
             <id>github</id>
             <url>https://maven.pkg.github.com/github-laziji/reverse-regexp</url>
         </repository>
     </repositories>
-    
     <dependencies>
         <dependency>
             <groupId>org.laziji.commons</groupId>
@@ -22,9 +20,7 @@
             <version>1.0.1</version>
         </dependency>
     </dependencies>
-    
 </project>
-
 ```
 
 ## 使用
