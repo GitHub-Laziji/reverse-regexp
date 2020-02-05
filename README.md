@@ -5,18 +5,26 @@
 从正则表达式生成随机数据
 
 ## 安装
-```
-git clone https://github.com/GitHub-Laziji/reverse-regexp.git
-cd reverse-regexp
-mvn install
-```
-
 ```xml
-<dependency>
-    <groupId>org.laziji.commons</groupId>
-    <artifactId>reverse-regexp</artifactId>
-    <version>1.0-SNAPSHOT</version>
-</dependency>
+<project>
+
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/github-laziji/reverse-regexp</url>
+        </repository>
+    </repositories>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.laziji.commons</groupId>
+            <artifactId>reverse-regexp</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+    </dependencies>
+    
+</project>
+
 ```
 
 ## 使用
