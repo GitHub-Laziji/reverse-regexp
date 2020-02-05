@@ -1,4 +1,4 @@
-# reverse-regexp
+# Reverse Regexp
 ![](https://img.shields.io/github/languages/top/github-laziji/reverse-regexp.svg?style=flat)
 ![](https://img.shields.io/github/stars/gitHub-laziji/reverse-regexp.svg?style=social)
 
