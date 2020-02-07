@@ -4,13 +4,17 @@
 
 从正则表达式生成随机数据
 
-## 安装
+## 手动安装或者使用Github Packages
 ```
+//手动安装
 git clone https://github.com/GitHub-Laziji/reverse-regexp.git
 cd reverse-regexp
 mvn install
 ```
 
+[使用 Maven Github Packages](https://help.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-apache-maven-for-use-with-github-packages)
+
+然后在项目中引入
 ```xml
 <dependency>
     <groupId>org.laziji.commons</groupId>
@@ -18,6 +22,7 @@ mvn install
     <version>1.0.1</version>
 </dependency>
 ```
+
 
 ## 使用
 ### 随机字符语法
