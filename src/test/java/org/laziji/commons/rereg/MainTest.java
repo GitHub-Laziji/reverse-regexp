@@ -21,7 +21,7 @@ public class MainTest {
         random("[A-Z][a-z]{4,6}", "英文名");
         random("[1-9][0-9]?", "年龄");
         random("(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])(\\.(\\d|[1-9]\\d|1\\d{2}|2[0-4]\\d|25[0-5])){3}", "IP");
-
+        random("\\d{3}-\\d{8}|\\d{4}-\\d{7}","电话");
     }
 
     private void random(String expression, String title)
