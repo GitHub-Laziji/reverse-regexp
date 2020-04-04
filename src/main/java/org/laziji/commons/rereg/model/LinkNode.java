@@ -13,11 +13,11 @@ public class LinkNode extends BaseNode {
 
     private List<Node> children;
 
-    LinkNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
+    protected LinkNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments);
     }
 
-    LinkNode(List<String> expressionFragments, boolean initialize)
+    protected LinkNode(List<String> expressionFragments, boolean initialize)
             throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments, initialize);
     }

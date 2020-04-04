@@ -13,11 +13,11 @@ public abstract class BaseNode implements Node {
     private List<String> expressionFragments;
     private boolean initialized;
 
-    BaseNode(String expression) throws RegexpIllegalException, TypeNotMatchException {
+    protected BaseNode(String expression) throws RegexpIllegalException, TypeNotMatchException {
         this(expression, true);
     }
 
-    BaseNode(String expression, boolean initialize) throws RegexpIllegalException, TypeNotMatchException {
+    protected BaseNode(String expression, boolean initialize) throws RegexpIllegalException, TypeNotMatchException {
         this.expression = expression;
         this.expressionFragments = spliceExpression(expression);
         if (initialize) {
@@ -25,11 +25,11 @@ public abstract class BaseNode implements Node {
         }
     }
 
-    BaseNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
+    protected BaseNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
         this(expressionFragments, true);
     }
 
-    BaseNode(List<String> expressionFragments, boolean initialize)
+    protected BaseNode(List<String> expressionFragments, boolean initialize)
             throws RegexpIllegalException, TypeNotMatchException {
         this.expressionFragments = expressionFragments;
         StringBuilder stringBuilder = new StringBuilder();
@@ -71,6 +71,11 @@ public abstract class BaseNode implements Node {
         }
     }
 
+    @Override
+    public String getExpression() {
+        return expression;
+    }
+
     protected String random(String expression, List<String> expressionFragments)
             throws RegexpIllegalException, UninitializedException {
         return null;
@@ -84,12 +89,6 @@ public abstract class BaseNode implements Node {
     protected boolean test(String expression, List<String> expressionFragments) {
         return true;
     }
-
-    @Override
-    public String getExpression() {
-        return expression;
-    }
-
 
     private List<String> spliceExpression(String expression) throws RegexpIllegalException {
         int l = 0;

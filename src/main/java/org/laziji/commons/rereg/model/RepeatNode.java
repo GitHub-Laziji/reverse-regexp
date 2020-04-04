@@ -16,11 +16,11 @@ public class RepeatNode extends BaseNode {
     private int minRepeat = 1;
     private int maxRepeat = 1;
 
-    RepeatNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
+    protected RepeatNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments);
     }
 
-    RepeatNode(List<String> expressionFragments, boolean initialize)
+    protected RepeatNode(List<String> expressionFragments, boolean initialize)
             throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments, initialize);
     }

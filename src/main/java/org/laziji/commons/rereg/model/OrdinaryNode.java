@@ -14,12 +14,12 @@ public class OrdinaryNode extends BaseNode {
         super(expression);
     }
 
-    OrdinaryNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
+    protected OrdinaryNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments);
     }
 
     @Override
-    public void init(String expression, List<String> expressionFragments)
+    protected void init(String expression, List<String> expressionFragments)
             throws RegexpIllegalException, TypeNotMatchException {
         if (expressionFragments.size() == 0) {
             return;

@@ -14,11 +14,11 @@ public class SingleNode extends BaseNode {
 
     private List<Interval> intervals;
 
-    SingleNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
+    protected SingleNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments);
     }
 
-    SingleNode(List<String> expressionFragments, boolean initialize)
+    protected SingleNode(List<String> expressionFragments, boolean initialize)
             throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments, initialize);
     }

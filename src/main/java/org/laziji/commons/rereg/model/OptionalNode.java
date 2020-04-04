@@ -12,11 +12,11 @@ public class OptionalNode extends BaseNode {
 
     private List<Node> children;
 
-    OptionalNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
+    protected OptionalNode(List<String> expressionFragments) throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments);
     }
 
-    OptionalNode(List<String> expressionFragments, boolean initialize)
+    protected OptionalNode(List<String> expressionFragments, boolean initialize)
             throws RegexpIllegalException, TypeNotMatchException {
         super(expressionFragments, initialize);
     }
