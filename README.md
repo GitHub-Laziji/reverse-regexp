@@ -13,11 +13,10 @@ mvn install
 ```
 
 ### 使用Github Packages
-[使用 Maven Github Packages](https://help.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-apache-maven-for-use-with-github-packages)
+使用 [Maven GitHub Packages](https://help.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-apache-maven-for-use-with-github-packages)
 
-该方式需要[GitHub Token](https://help.github.com/en/packages/publishing-and-managing-packages/about-github-packages#about-tokens)
-
-勾选`read:packages`权限
+该方式需要创建 [GitHub Token](https://help.github.com/en/packages/publishing-and-managing-packages/about-github-packages#about-tokens) 
+并勾选 `read:packages` 权限
 
 ## 引入
 
