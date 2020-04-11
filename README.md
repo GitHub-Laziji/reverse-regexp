@@ -4,22 +4,29 @@
 
 从正则表达式生成随机数据
 
-## 手动安装或者使用Github Packages
+## 安装
+### Git方式安装
 ```
-//手动安装
 git clone https://github.com/GitHub-Laziji/reverse-regexp.git
 cd reverse-regexp
 mvn install
 ```
 
+### 使用Github Packages
 [使用 Maven Github Packages](https://help.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-apache-maven-for-use-with-github-packages)
+
+该方式需要[GitHub Token](https://help.github.com/en/packages/publishing-and-managing-packages/about-github-packages#about-tokens)
+
+勾选`read:packages`权限
+
+## 引入
 
 然后在项目中引入
 ```xml
 <dependency>
     <groupId>org.laziji.commons</groupId>
     <artifactId>reverse-regexp</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
