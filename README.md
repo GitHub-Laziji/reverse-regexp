@@ -25,7 +25,7 @@ mvn install
 <dependency>
     <groupId>org.laziji.commons</groupId>
     <artifactId>reverse-regexp</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 

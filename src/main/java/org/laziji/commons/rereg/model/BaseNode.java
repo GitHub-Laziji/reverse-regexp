@@ -44,7 +44,7 @@ public abstract class BaseNode implements Node {
 
     @Override
     public String random() throws UninitializedException, RegexpIllegalException {
-        if (!isInitialized()) {
+        if (!initialized) {
             throw new UninitializedException();
         }
         return random(expression, expressionFragments);
